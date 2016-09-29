@@ -11,8 +11,8 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Route::get('/auth0/callback', '\Auth0\Login\Auth0Controller@callback');
+
+Auth::routes();
+
+Route::get('/', 'HomeController@index');
