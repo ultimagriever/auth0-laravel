@@ -14,29 +14,41 @@
         </div>
     </div>
 
-    <script src="https://cdn.auth0.com/js/lock/10.2/lock.min.js"></script>
+    <!-- Latest patch release (recommended for production) -->
+    <script src="https://cdn.auth0.com/js/lock-passwordless-2.2.3.min.js"></script>
     <script>
-        var lock = new Auth0Lock('{{ env('AUTH0_CLIENT_ID') }}', '{{ env('AUTH0_DOMAIN') }}', {
+//        var lock = new Auth0Lock('{{ env('AUTH0_CLIENT_ID') }}', '{{ env('AUTH0_DOMAIN') }}',
+//          );
+
+        var lock = new Auth0LockPasswordless('{{ env('AUTH0_CLIENT_ID') }}', '{{ env('AUTH0_DOMAIN') }}');
+        lock.emailcode({
             container: 'login',
-            auth: {
-                redirectUrl: 'https://auth0-laravel.dev/auth0/callback',
-                responseType: 'code',
-                params: {
-                    scope: 'openid email' // Learn about scopes: https://auth0.com/docs/scopes
+            labeledSubmitButton: true,
+            icon: 'https://upload.wikimedia.org/wikipedia/en/thumb/2/2a/Major_League_Baseball.svg/1280px-Major_League_Baseball.svg.png',
+            primaryColor: '#0B1A57',
+            dict: {
+                title: 'Auth0 Laravel App',
+                welcome: 'Seja bem vindo, {name}!',
+                email: {
+                    emailInputPlaceholder: 'exemplo@exemplo.com',
+                    footerText: 'Produzido por JP7',
+                    headerText: 'Digite seu e-mail'
+                },
+                confirmation: {
+                    success: 'Obrigado por se cadastrar.',
+                    failure: 'Não foi possível cadastrar seu usuário, favor entrar em contato com um administrador.'
+                },
+                code: {
+                    codeInputPlaceholder: 'Seu código',
+                    footerText: '',
+                    headerText: 'A senha foi enviada para sua caixa de e-mail ({email}).'
                 }
             },
-            language: 'pt-BR',
-            theme: {
-                labeledSubmitButton: true,
-                logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/2/2a/Major_League_Baseball.svg/1280px-Major_League_Baseball.svg.png',
-                primaryColor: '#0B1A57'
-            },
-            languageDictionary: {
-                title: 'Auth0 Laravel App'
+            authParams: {
+                callbackURL: '{{ env('APP_URL') }}/auth0/callback',
+                responseType: 'code'
             }
         });
-
-        lock.show();
     </script>
 
 @endsection
